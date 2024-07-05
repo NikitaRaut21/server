@@ -11,7 +11,7 @@ import {
     getPlantId, 
     putPlantId, 
     deletePlantId 
-    } from "./controllers/health.js";
+    } from "./controllers/plant.js";
  import { handlepageNotFound} from "./controllers/error.js"
 
 const app = express()
