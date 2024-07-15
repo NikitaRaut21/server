@@ -4,9 +4,11 @@ const plantSchema = new Schema({
     name:String,
     category:String,
     price:Number,
-    decription:String
+    description:String
     
 
+},{
+    timestamps:true
 })
 
 const Plant = model ( "Plant",plantSchema)

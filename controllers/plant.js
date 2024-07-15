@@ -6,14 +6,14 @@ const plants =[]
         name,
          category,
         price,
-     decription
+     description
     } =req.body
 
     const newPlant = new Plant({
       name:name,
       category:category,
       price:price,
-      decription:decription
+      description:description
     })
 const savedPlant =  await newPlant.save();
 
@@ -26,7 +26,7 @@ const savedPlant =  await newPlant.save();
 }
 const getPlants = async(req,res)=>{
 
-  const  allplants=  await Plant.find()
+  const  allplants=  await Plant.find().sort({createdAT:-1})
 
     res.json({
        success:true,
@@ -57,7 +57,7 @@ const getPlants = async(req,res)=>{
        name,
         category,
        price,
-    decription
+    description
    } =req.body
    const {id} = req.params
    const updateResult = await plant.updateOne({_id:id},{
@@ -65,7 +65,7 @@ const getPlants = async(req,res)=>{
         name: name,
         category:category,
         price:price,
-        decription:decription
+        description:description
       }
  })
  const updatedPlant = await Plant.findById(id)
@@ -91,14 +91,7 @@ const getPlants = async(req,res)=>{
  }
  
  
- 
-
-
-
-
-
-
-export{
+ export{
     postPlant,
     getPlants,
     getPlantId,
