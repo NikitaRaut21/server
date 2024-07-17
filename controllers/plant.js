@@ -1,102 +1,124 @@
- import Plant from "./../models/plant.js"
-const plants =[]
+import Plant from "./../models/plant.js";
 
-  const postPlant = async (req,res)=>{
-    const{ 
-        name,
-         category,
-        price,
-     description
-    } =req.body
+const postPlant = async (req, res) => {
+  const { name, category, price, description } = req.body;
 
+  try {
     const newPlant = new Plant({
-      name:name,
-      category:category,
-      price:price,
-      description:description
-    })
-const savedPlant =  await newPlant.save();
+      name,
+      category,
+      price,
+      description
+    });
 
+    const savedPlant = await newPlant.save();
+    console.log(savedPlant.description)
+    res.json({
+      success: true,
+      data: savedPlant,
+      message: "New plant added successfully"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error adding plant",
+      error: error.message
+    });
+  }
+};
 
- res.json({
-    success:true,
-    data:savedPlant,
-    message:"new Plant added successfully" 
- })
-}
-const getPlants = async(req,res)=>{
-
-  const  allplants=  await Plant.find().sort({createdAT:-1})
+const getPlants = async (req, res) => {
+  try {
+    const allPlants = await Plant.find().sort({ createdAt: -1 });
 
     res.json({
-       success:true,
-       data:allplants,
-       meassgae:"all plants fetched successfully"
-    })
- }
- const getPlantId = async(req,res)=>{
+      success: true,
+      data: allPlants,
+      message: "All plants fetched successfully"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching plants",
+      error: error.message
+    });
+  }
+};
 
-    const {id} = req.params
+const getPlantId = async (req, res) => {
+  const { id } = req.params;
 
-    const  plant = await plant.findById(id)
+  try {
+    const plant = await Plant.findById(id);
 
-   res.json({
-          success: plant ? true: false,
-          data: plant ||null,
-          meassage:plant? "plant fetched successfully":"plant not found"
-         
-          })
-         
-    }
-   
-   
+    res.json({
+      success: plant ? true : false,
+      data: plant || null,
+      message: plant ? "Plant fetched successfully" : "Plant not found"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching plant",
+      error: error.message
+    });
+  }
+};
 
- const putPlantId = async(req,res)=>{
- 
-    let { 
-       name,
+const putPlantId = async (req, res) => {
+  const { name, category, price, description } = req.body;
+  const { id } = req.params;
+
+  try {
+    await Plant.updateOne({ _id: id }, {
+      $set: {
+        name,
         category,
-       price,
-    description
-   } =req.body
-   const {id} = req.params
-   const updateResult = await plant.updateOne({_id:id},{
-     $set: {
-        name: name,
-        category:category,
-        price:price,
-        description:description
+        price,
+        description
       }
- })
- const updatedPlant = await Plant.findById(id)
- res.json({
-   success:true,
-   meassage:"plant updated successfully",
-   data:updatedPlant
+    });
 
- })
-   
-    
- }
- const deletePlantId  = async (req,res)=>{
-    const {id}=req.params
-       await plant.updateOne({
-         _id:id 
-       })
+    const updatedPlant = await Plant.findById(id);
+
     res.json({
-         success:true,
-         meassage:"plant deleted successfully",
-         data:null
-    })
- }
- 
- 
- export{
-    postPlant,
-    getPlants,
-    getPlantId,
-    putPlantId,
-    deletePlantId 
-}
-    
-   
+      success: true,
+      message: "Plant updated successfully",
+      data: updatedPlant
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error updating plant",
+      error: error.message
+    });
+  }
+};
+
+const deletePlantId = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await Plant.deleteOne({ _id: id });
+
+    res.json({
+      success: true,
+      message: "Plant deleted successfully",
+      data: null
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error deleting plant",
+      error: error.message
+    });
+  }
+};
+
+export {
+  postPlant,
+  getPlants,
+  getPlantId,
+  putPlantId,
+  deletePlantId
+};
